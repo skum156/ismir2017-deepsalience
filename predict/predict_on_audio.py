@@ -1,6 +1,9 @@
 """Script to predict deepsalience output from audio"""
 from __future__ import print_function
 
+import pretty_midi
+import numpy as np
+import os
 import argparse
 import librosa
 import numpy as np
@@ -302,6 +305,48 @@ def save_singlef0_output(times, freqs, output_path):
             csv_writer.writerow([t, f])
 
 
+
+def save_singlef0_as_midi(times, freqs, midi_path, min_note_len=0.05):
+    def hz2midi(f):
+        if f <= 0:
+            return None
+        return 69 + 12 * np.log2(f / 440.0)
+    midi_nums = [hz2midi(f) if f > 0 else None for f in freqs]
+    pm = pretty_midi.PrettyMIDI()
+    instrument = pretty_midi.Instrument(program=0)
+    prev_note = None
+    note_on = None
+    for i, midi_num in enumerate(midi_nums):
+        t = times[i]
+        if midi_num is not None:
+            midi_num = int(round(midi_num))
+            if prev_note != midi_num:
+                if prev_note is not None:
+                    end_t = t
+                    if end_t - note_on >= min_note_len:
+                        note = pretty_midi.Note(velocity=100, pitch=prev_note, start=note_on, end=end_t)
+                        instrument.notes.append(note)
+                note_on = t
+            prev_note = midi_num
+        else:
+            if prev_note is not None:
+                end_t = t
+                if end_t - note_on >= min_note_len:
+                    note = pretty_midi.Note(velocity=100, pitch=prev_note, start=note_on, end=end_t)
+                    instrument.notes.append(note)
+                prev_note = None
+                note_on = None
+    # End last note
+    if prev_note is not None and note_on is not None:
+        end_t = times[-1]
+        if end_t - note_on >= min_note_len:
+            note = pretty_midi.Note(velocity=100, pitch=prev_note, start=note_on, end=end_t)
+            instrument.notes.append(note)
+    pm.instruments.append(instrument)
+    pm.write(midi_path)
+    print("MIDI written to", midi_path)
+
+
 def compute_output(hcqt, time_grid, freq_grid, task, output_format, threshold,
                    use_neg, save_dir, save_name):
     """Comput output for a given task
@@ -342,6 +387,9 @@ def compute_output(hcqt, time_grid, freq_grid, task, output_format, threshold,
         save_path = os.path.join(
             save_dir, "{}_{}_singlef0.csv".format(save_name, task))
         save_singlef0_output(times, freqs, save_path)
+        # Also save as MIDI
+        midi_path = os.path.splitext(save_path)[0] + ".mid"
+        save_singlef0_as_midi(times, freqs, midi_path)
     elif output_format == 'multif0':
         times, freqs = get_multif0(
             pitch_activation_mat, freq_grid, time_grid, thresh=threshold)
