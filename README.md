@@ -136,7 +136,22 @@ import matplotlib
 matplotlib.use('TkAgg')
 If you get pip/conda versioning issues: Try using a clean Python 3.8/3.9 virtual environment, then pip install -r requirements.txt.
 
+
+Improvements & Additional Features
+After resolving environment issues with requirements.txt, the following updates were made:
+
+MIDI Output:
+Each melody prediction is now exported as a .mid file for easy listening and downstream music processing.
+
+Flexible Output:
+Output directory and file naming are more robust for batch processing.
 Citation
+
+Preprocessing/Downsampling done beforehand
+
+
+
+
 If you use DeepSalience, please cite:
 [Insert citation here]
 
