@@ -16,13 +16,13 @@ Replaced replicate.yaml with environment.yml. Not using certain dependencies
 
 After creating conda environment navigate to envs folder and navigate to keras directory. Navigate to site packages and go to keras/engine/saving.py Replace this file with updated saving.py file given in this repository to fix keras patch. 
 
-# First locate the real path:
+First locate real path: 
 python - <<'EOF'
 import keras, os
 print(os.path.join(os.path.dirname(keras.__file__), "engine", "saving.py"))
 EOF
 
-# Suppose it prints /…/site-packages/keras/engine/saving.py, then do:
+Suppose it prints /…/site-packages/keras/engine/saving.py, then do:
 cp updated_saving.py /…/site-packages/keras/engine/saving.py
 
 
