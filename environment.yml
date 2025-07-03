@@ -1,0 +1,18 @@
+name: deepsalience-cpu
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.6
+  - numpy
+  - scipy
+  - ffmpeg
+  - pip
+  - pip:
+      - pescador>=1.0.0
+      - keras==2.2.4
+      - tensorflow==1.12.0
+      - librosa>=0.5.0
+      - mir_eval>=0.4
+      - joblib>=1.0.0
+      - pretty_midi
