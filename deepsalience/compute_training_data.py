@@ -1,6 +1,7 @@
 """Script to compute training data"""
 from __future__ import print_function
-
+from patch_h5py import *
+from patch_h5py import *
 import argparse
 from joblib import Parallel, delayed
 import librosa

@@ -1,7 +1,8 @@
 """Core data and model architecture classes
 """
 from __future__ import print_function
-
+from patch_h5py import *
+from patch_h5py import *
 import numpy as np
 np.random.seed(1337)
 import keras

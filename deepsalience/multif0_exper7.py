@@ -1,4 +1,5 @@
 from __future__ import print_function
+from patch_h5py import * 
 import keras
 from keras.models import Model
 from keras.layers import Dense, Input, Reshape, Lambda

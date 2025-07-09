@@ -1,4 +1,5 @@
 from __future__ import print_function
+from patch_h5py import * 
 import os
 import glob
 import importlib
