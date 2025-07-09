@@ -1,159 +1,74 @@
-DeepSalience: Deep Learning-Based Melody Extraction
-This repository provides code, pretrained models, and evaluation scripts for the DeepSalience approach to automatic melody and pitch extraction from audio.
+ISMIR2017-DeepSalience
+This repository contains the implementation and experiments related to DeepSalience, a deep learning model for multi-pitch and multi-instrument transcription, originally presented at ISMIR 2017.
 
-Demo
-Demo page: [TODO: Add demo link if available]
+Overview
+DeepSalience performs simultaneous transcription of multiple pitches and instruments from audio input using advanced neural architectures. This repository hosts:
 
-Requirements
-IMPORTANT:
-Setting up the environment via environment.yml (Conda) currently does not work due to conflicts and strict dependency pinning for older versions (especially for Keras and TensorFlow, and CUDA version issues).
-However, installing dependencies using requirements.txt with pip does work on most systems (tested on Mac/CPU and Linux/GPU).
-This is due to pip’s more flexible handling of some OS- or hardware-specific dependencies and newer packaging formats.
+Core model and training scripts
 
-Install with:
+Data preprocessing and augmentation pipelines
+
+Evaluation and inference scripts
+
+Support for SLakh dataset loading
+
+Custom patches for compatibility with Keras and other dependencies
+
+What’s New / Updates by Me
+Improved preprocessing scripts for better data pipeline management
+
+Refactored and updated transcription-related scripts (transcription.py, predict_on_audio.py)
+
+Added slakh_loader repository integration to support SLakh dataset processing
+
+Applied patches to Keras dependencies to ensure smooth compatibility and reproducibility
+
+    - To make keras patch after creating conda environment navigate to site-packages/keras/engine/saving.py variations depend on        OS and replace file named saving.py with updated_saving.py file. 
+
+Enhanced evaluation metrics and output handling
+
+Cleaned up experiment scripts and datasets handling for easier use
+
+Repository Structure
+deepsalience/ — Core source code and model definitions
+
+predict/ — Scripts and utilities for inference and prediction on audio inputs
+
+outputs/ — Output files such as transcription results, evaluation metrics
+
+envs — Environment setup files and necessary patches for dependencies
+
+requirements.txt / environment.yml — Dependency listings for environment setup
+
+Setup and Installation
+Create and activate a Python environment (e.g., with Conda or venv)
+
+Install dependencies:
 
 bash
 Copy
-Edit
 pip install -r requirements.txt
-You must also install ffmpeg separately for audio processing:
+# or
+conda env create -f environment.yml
+conda activate deepsalience
+Apply any necessary patches in the patches/ directory (if applicable).
 
-On macOS: brew install ffmpeg
+Usage
+Preprocessing: Run scripts in deepsalience/ to prepare training data.
 
-On Linux: sudo apt-get install ffmpeg
+Training: Use provided training scripts to train the DeepSalience model.
 
-Using Pretrained Models
-We provide pretrained weights for melody extraction.
+Prediction: Use predict/predict_on_audio.py to transcribe audio files.
 
-To run prediction on your own audio:
-Preprocessing:
+Evaluation: Scripts to evaluate transcription quality on test sets.
 
-Ensure your audio files are downsampled to 22050 Hz (the model’s default sample rate).
-
-Supported input formats: .wav, .flac (other formats may require conversion).
-
-Prediction:
-Place your audio files in a folder, e.g. input_audio/, and run:
+Example command for prediction:
 
 bash
 Copy
-Edit
-python predict_on_audio.py <audio_fpath> <task> <save_dir> -f <output_format>
-<audio_fpath>: Path to your input audio file.
-
-<task>: Choose one from bass, melody1, melody2, melody3, multif0, pitch, vocal, or all.
-
-<save_dir>: Output folder.
-
--f <output_format>: Choose from singlef0 (CSV + MIDI), multif0 (CSV), or salience (npz).
-
-Example:
-
-bash
-Copy
-Edit
-python predict_on_audio.py input_audio/song.wav melody1 outputs/ -f singlef0
-This will produce .csv and .mid files for the transcription.
-
-Installation
-Install requirements (Recommended):
-
-bash
-Copy
-Edit
-pip install -r requirements.txt
-DeepSalience relies on specific old versions of TensorFlow, Keras, and sometimes CUDA, which are not consistently available via Conda/Anaconda channels(environment.yml) 
-
-Conda environments are stricter about OS compatibility and binary packages, and may refuse to install or resolve dependency trees if a single (often OS-specific) package is missing.
-
-Pip is more flexible and will attempt to install what it can, even from source, which is why requirements.txt usually succeeds where environment.yml fails.
-
-If you must use Conda:
-
-You may need to manually edit the environment.yml to match your OS and available versions, or consider building the environment with pip after activating a minimal Conda environment.
-
-Running the Code
-Single file prediction:
-
-bash
-Copy
-Edit
-python predict_on_audio.py <audio_fpath> melody1 outputs/ -f singlef0
-Batch prediction:
-Example (bash loop):
-
-bash
-Copy
-Edit
-for file in input_audio/*.wav; do
-    python predict_on_audio.py "$file" melody1 outputs/ -f singlef0
-done
-Training from Scratch
-Not typically required for standard use (since pretrained models are provided), but advanced users can:
-
-Download datasets:
-
-MedleyDB
-
-MAPS dataset
-
-Preprocess audio:
-
-Downsample to 22,050 Hz.
-
-Convert ground-truth MIDI to csv if evaluating.
-
-Modify/extend training scripts as needed (TODO: scripts to be provided).
-
-Evaluation and Output
-Output formats:
-
-singlef0: Monophonic f0 (csv and MIDI)
-
-multif0: Polyphonic f0 (csv)
-
-salience: Raw model output (npz)
-
-NEW:
-
-The code now outputs MIDI files directly alongside csv, for easier downstream music processing.
-
-Notes & Troubleshooting
-environment.yml may fail on modern systems, especially Apple Silicon/Mac or when strict CUDA versions are not available.
-
-requirements.txt works because pip is more forgiving about building from source and ignores platform-specific binary issues.
-
-CUDA GPU acceleration: Only available on supported Linux/NVIDIA/CUDA systems with matching TensorFlow/Keras versions.
-
-Mac/CPU users: Use TensorFlow CPU; ignore CUDA errors.
-
-For matplotlib on Mac, add:
-
-python
-Copy
-Edit
-import matplotlib
-matplotlib.use('TkAgg')
-If you get pip/conda versioning issues: Try using a clean Python 3.8/3.9 virtual environment, then pip install -r requirements.txt.
-
-
-Improvements & Additional Features
-After resolving environment issues with requirements.txt, the following updates were made:
-
-MIDI Output:
-Each melody prediction is now exported as a .mid file for easy listening and downstream music processing.
-
-Flexible Output:
-Output directory and file naming are more robust for batch processing.
+python predict/predict_on_audio.py --input <audio_file> --output <result_path>
 Citation
-
-Preprocessing/Downsampling done beforehand
-
+If you use this repository for research or projects, please cite:
 
 
 
-If you use DeepSalience, please cite:
-[Insert citation here]
-
-Contact
-Open an issue on GitHub or email the maintainers for help.
