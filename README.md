@@ -67,8 +67,7 @@ Example command for prediction:
 bash
 Copy
 python predict/predict_on_audio.py --input <audio_file> --output <result_path>
-Citation
-If you use this repository for research or projects, please cite:
+
 
 
 
